@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:bhumeet_user/screen/home_screen.dart'; // Change this to your actual home screen
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -12,6 +10,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
+  late Animation<Offset> _slideAnimation; // Added slide animation
 
   @override
   void initState() {
@@ -27,15 +26,19 @@ class _SplashScreenState extends State<SplashScreen>
       end: 1,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
+    // Slide animation for logo (from bottom)
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, 0.5), // Start below the screen
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
     _controller.forward();
 
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ), // Replace with your main screen
-      );
+        '/language_selection',
+      ); // Named route is cleaner
     });
   }
 
@@ -48,46 +51,53 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.blue.shade700, // Background color similar to image
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          Center(
-            child: FadeTransition(
-              opacity: _opacityAnimation,
-              child: RichText(
-                text: TextSpan(
-                  style: GoogleFonts.poppins(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: "भ", // Hindi Character
-                      style: TextStyle(
-                        fontFamily: 'Mukta', // Use a Hindi-friendly font
-                        fontSize: 50,
-                      ),
-                    ),
-                    TextSpan(text: "Meet"),
-                  ],
-                ),
+          // Background Drone Image with Blur
+          Image.asset(
+            'assets/drone_image.jpg',
+            fit: BoxFit.cover,
+            color: Colors.black.withOpacity(0.3), // Darken the image
+            colorBlendMode: BlendMode.darken, // Apply the darken blend mode
+          ),
+          // Gradient Overlay for better text visibility
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.5), // Adjust opacity as needed
+                ],
               ),
             ),
           ),
-          Positioned(
-            top: 100,
-            right: 20,
-            child: Lottie.asset(
-              'assets/drone_animation.json', // Include an animated drone effect
-              width: 100,
+          // Centered AeroSystem Logo with Fade and Slide
+          Center(
+            child: FadeTransition(
+              opacity: _opacityAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Text(
+                  "AeroSystem",
+                  style: GoogleFonts.poppins(
+                    fontSize: MediaQuery.of(context).size.width * 0.12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      // Add a subtle shadow
+                      Shadow(
+                        blurRadius: 5.0,
+                        color: Colors.black.withOpacity(0.5),
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 100,
-            left: 20,
-            child: Lottie.asset('assets/drone_animation.json', width: 100),
           ),
         ],
       ),
