@@ -63,14 +63,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               // Next Button
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              NextScreen(), // Replace with your next screen
-                    ),
-                  );
+                  Navigator.pushNamed(context, '/location_permission');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue, // Button color
@@ -88,16 +81,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// Dummy Next Screen (Replace with actual next screen)
-class NextScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Next Screen", style: TextStyle(fontSize: 20))),
     );
   }
 }

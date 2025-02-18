@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bhumeet_user/screen/splash_screen.dart';
 import 'package:bhumeet_user/screen/language_selection_screen.dart';
+import 'package:bhumeet_user/screen/location_permission_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => SplashScreen(),
         '/language_selection': (context) => LanguageSelectionScreen(),
+        '/location_permission': (context) => LocationPermissionScreen(),
       },
     );
   }
