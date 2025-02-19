@@ -1,7 +1,6 @@
-// filepath: /D:/flutter_project/bhumeet_user/lib/screen/location_permission_screen.dart
-// filepath: /D:/flutter_project/bhumeet_user/lib/screen/location_permission_screen.dart
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationPermissionScreen extends StatefulWidget {
   @override
@@ -10,25 +9,50 @@ class LocationPermissionScreen extends StatefulWidget {
 }
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
-  Future<void> _requestLocationPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      permission = await Geolocator.requestPermission();
-    }
+  GoogleMapController? _mapController;
+  LatLng? _currentLocation;
+
+  /// Function to request location and navigate
+  Future<void> _requestLocation(bool precise) async {
+    LocationPermission permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
-      Navigator.pushReplacementNamed(
-        context,
-        '/next_screen',
-      ); // Replace with your next screen route
-    } else {
-      // Handle permission denied scenario
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Location permission is required to proceed.')),
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: precise ? LocationAccuracy.high : LocationAccuracy.low,
       );
+
+      setState(() {
+        _currentLocation = LatLng(position.latitude, position.longitude);
+      });
+
+      if (_mapController != null) {
+        _mapController!.animateCamera(
+          CameraUpdate.newLatLng(_currentLocation!),
+        );
+      }
+
+      // Show success message
+      _showMessage("Location permission granted ✅", Colors.green);
+
+      // Delay and navigate to enter_mobile screen
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushReplacementNamed(context, '/enter_mobile');
+      });
+    } else {
+      _showMessage("Location permission is required ❌", Colors.red);
     }
+  }
+
+  /// Show message as SnackBar
+  void _showMessage(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyle(color: Colors.white)),
+        backgroundColor: color,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -39,7 +63,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF242947), Color(0xFF151828)],
+            colors: [Color(0xFF0A1F44), Color(0xFF0A0F24)],
           ),
         ),
         child: Center(
@@ -53,26 +77,76 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Icon(Icons.location_on, size: 50, color: Colors.blue),
+                  SizedBox(height: 10),
                   Text(
-                    'Allow Location Access',
+                    'Allow AeroSystem to access your location?',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 20.0),
-                  Text(
-                    'We need access to your location to provide better services and enhance your experience.',
-                    style: TextStyle(fontSize: 16.0, color: Colors.black54),
-                    textAlign: TextAlign.center,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => _requestLocation(true),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.blue.withOpacity(0.1),
+                              child: Icon(
+                                Icons.gps_fixed,
+                                size: 40,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Precise',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => _requestLocation(false),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.orange.withOpacity(0.1),
+                              child: Icon(
+                                Icons.map,
+                                size: 40,
+                                color: Colors.orange,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              'Approximate',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _requestLocationPermission,
+                    onPressed: () => _requestLocation(true),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF242947), // Background color
+                      backgroundColor: Colors.blue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -82,8 +156,30 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                       ),
                     ),
                     child: Text(
-                      'Allow',
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
+                      'WHILE USING THE APP',
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => _requestLocation(false),
+                    child: Text(
+                      'ONLY THIS TIME',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _showMessage("Location access denied ❌", Colors.red);
+                      Future.delayed(Duration(seconds: 1), () {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          '/enter_mobile',
+                        );
+                      });
+                    },
+                    child: Text(
+                      'DON\'T ALLOW',
+                      style: TextStyle(fontSize: 16, color: Colors.red),
                     ),
                   ),
                 ],
