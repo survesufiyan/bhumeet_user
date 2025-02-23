@@ -1,38 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class OTPVerificationScreen extends StatelessWidget {
+class OTPVerificationScreen extends StatefulWidget {
   final String phoneNumber;
+  final String verificationId;
 
-  OTPVerificationScreen({required this.phoneNumber});
+  OTPVerificationScreen({
+    required this.phoneNumber,
+    required this.verificationId,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _otpController = TextEditingController();
-    bool _isLoading = false;
+  _OTPVerificationScreenState createState() => _OTPVerificationScreenState();
+}
 
-    /// Function to handle OTP submission
-    void _verifyOTP() {
-      if (_otpController.text.length == 6) {
+class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  final TextEditingController _otpController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+
+  /// Function to verify OTP
+  Future<void> _verifyOTP() async {
+    String otp = _otpController.text.trim();
+    if (otp.length == 6) {
+      setState(() {
         _isLoading = true;
+      });
 
-        Future.delayed(Duration(seconds: 2), () {
+      try {
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: widget.verificationId,
+          smsCode: otp,
+        );
+
+        await _auth.signInWithCredential(credential);
+
+        // Navigate to Home Screen on Success
+        Navigator.pushReplacementNamed(context, '/home');
+      } on FirebaseAuthException catch (e) {
+        setState(() {
           _isLoading = false;
+        });
+
+        _showError(e.message ?? "Invalid OTP. Please try again.");
+      }
+    } else {
+      _showError("Please enter a valid 6-digit OTP.");
+    }
+  }
+
+  /// Function to show error messages
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// Function to resend OTP
+  Future<void> _resendOTP() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: widget.phoneNumber,
+        timeout: Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+          Navigator.pushReplacementNamed(context, '/home');
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          _showError(e.message ?? "Failed to resend OTP.");
+          setState(() {
+            _isLoading = false;
+          });
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            _isLoading = false;
+          });
 
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('OTP Verified Successfully!')));
-
-          // Navigate to Home or Next Screen
-          Navigator.pushReplacementNamed(context, '/home');
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please enter a valid 6-digit OTP')),
-        );
-      }
+          ).showSnackBar(SnackBar(content: Text('OTP Resent Successfully!')));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (e) {
+      _showError("Something went wrong. Please try again.");
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -55,7 +120,7 @@ class OTPVerificationScreen extends StatelessWidget {
 
             // Subtitle
             Text(
-              "We sent a 6-digit OTP to $phoneNumber",
+              "We sent a 6-digit OTP to ${widget.phoneNumber}",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
@@ -104,11 +169,7 @@ class OTPVerificationScreen extends StatelessWidget {
 
             // Resend OTP
             TextButton(
-              onPressed: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Resending OTP...')));
-              },
+              onPressed: _isLoading ? null : _resendOTP,
               child: Text(
                 "Resend OTP",
                 style: TextStyle(fontSize: 16, color: Colors.blue),

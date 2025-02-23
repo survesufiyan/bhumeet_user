@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EnterMobileScreen extends StatefulWidget {
   @override
@@ -10,30 +11,67 @@ class EnterMobileScreen extends StatefulWidget {
 class _EnterMobileScreenState extends State<EnterMobileScreen> {
   final TextEditingController _phoneController = MaskedTextController(
     mask: '00000-00000',
-  ); // Auto-format (XXXXX-XXXXX)
+  );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Function to handle "Get OTP" button
-  void _handleGetOTP() {
+  /// Function to send OTP
+  Future<void> _handleGetOTP() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
 
-      Future.delayed(Duration(seconds: 2), () {
+      String phoneNumber = "+91" + _phoneController.text.replaceAll('-', '');
+
+      try {
+        await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            await _auth.signInWithCredential(credential);
+            _navigateToOTPVerification(phoneNumber);
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            setState(() {
+              _isLoading = false;
+            });
+            _showError(e.message ?? "Failed to send OTP.");
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            setState(() {
+              _isLoading = false;
+            });
+
+            // Navigate to OTP Verification Screen
+            Navigator.pushNamed(
+              context,
+              '/otp_verification',
+              arguments: {
+                'phone': phoneNumber,
+                'verificationId': verificationId,
+              },
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {},
+        );
+      } catch (e) {
         setState(() {
           _isLoading = false;
         });
-
-        // Navigate to OTP Verification Screen
-        Navigator.pushNamed(
-          context,
-          '/otp_verification',
-          arguments: _phoneController.text.replaceAll('-', ''),
-        );
-      });
+        _showError("Something went wrong. Please try again.");
+      }
     }
+  }
+
+  /// Navigate to OTP Verification Screen
+  void _navigateToOTPVerification(String phoneNumber) {
+    Navigator.pushNamed(
+      context,
+      '/otp_verification',
+      arguments: {'phone': phoneNumber},
+    );
   }
 
   /// Function to validate mobile number
@@ -45,6 +83,13 @@ class _EnterMobileScreenState extends State<EnterMobileScreen> {
       return "Enter a valid 10-digit number";
     }
     return null;
+  }
+
+  /// Show error message
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -35,9 +36,9 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
       // Show success message
       _showMessage("Location permission granted ✅", Colors.green);
 
-      // Delay and navigate to enter_mobile screen
+      // Navigate to Enter Mobile Screen
       Future.delayed(Duration(seconds: 1), () {
-        Navigator.pushReplacementNamed(context, '/enter_mobile');
+        Get.offNamed('/enter_mobile');
       });
     } else {
       _showMessage("Location permission is required ❌", Colors.red);
@@ -46,12 +47,13 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
 
   /// Show message as SnackBar
   void _showMessage(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: TextStyle(color: Colors.white)),
-        backgroundColor: color,
-        duration: Duration(seconds: 2),
-      ),
+    Get.snackbar(
+      '',
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: color,
+      colorText: Colors.white,
+      duration: Duration(seconds: 2),
     );
   }
 
@@ -80,7 +82,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                   Icon(Icons.location_on, size: 50, color: Colors.blue),
                   SizedBox(height: 10),
                   Text(
-                    'Allow AeroSystem to access your location?',
+                    'Allow Bhumeet User to access your location?',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -171,10 +173,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                     onPressed: () {
                       _showMessage("Location access denied ❌", Colors.red);
                       Future.delayed(Duration(seconds: 1), () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          '/enter_mobile',
-                        );
+                        Get.offNamed('/enter_mobile');
                       });
                     },
                     child: Text(
