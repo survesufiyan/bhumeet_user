@@ -1,38 +1,33 @@
+import 'package:aerospace/constants/app_route.dart';
+import 'package:aerospace/firebase_options.dart';
+import 'package:aerospace/services/firestore_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:bhumeet_user/screen/splash_screen.dart';
-import 'package:bhumeet_user/screen/language_selection_screen.dart';
-import 'package:bhumeet_user/screen/location_permission_screen.dart';
-import 'package:bhumeet_user/screen/enter_mobile_screen.dart';
-import 'package:bhumeet_user/screen/otp_verification_screen.dart';
+import 'package:get/get.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
+
+  _initServices();
+}
+
+void _initServices() {
+  Get.putAsync<FirestoreService>(() async => FirestoreService());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Bhumeet User',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => SplashScreen(),
-        '/language_selection': (context) => LanguageSelectionScreen(),
-        '/location_permission': (context) => LocationPermissionScreen(),
-        '/enter_mobile': (context) => EnterMobileScreen(),
-      },
-      onGenerateRoute: (settings) {
-        if (settings.name == '/otp_verification') {
-          final String phoneNumber = settings.arguments as String;
-          return MaterialPageRoute(
-            builder:
-                (context) => OTPVerificationScreen(phoneNumber: phoneNumber),
-          );
-        }
-        return null;
-      },
+      initialRoute: AppRoute.SPLASH_SCREEN,
+      getPages: AppRoute.pages,
     );
   }
 }

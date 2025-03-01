@@ -1,38 +1,75 @@
+import 'package:aerospace/services/firestore_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+
+import '../constants/app_route.dart';
 
 class EnterMobileScreen extends StatefulWidget {
+  const EnterMobileScreen({super.key});
+
   @override
-  _EnterMobileScreenState createState() => _EnterMobileScreenState();
+  EnterMobileScreenState createState() => EnterMobileScreenState();
 }
 
-class _EnterMobileScreenState extends State<EnterMobileScreen> {
+class EnterMobileScreenState extends State<EnterMobileScreen> {
   final TextEditingController _phoneController = MaskedTextController(
-    mask: '00000-00000',
-  ); // Auto-format (XXXXX-XXXXX)
+    mask: '0000000000',
+  );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Function to handle "Get OTP" button
-  void _handleGetOTP() {
+  /// Function to send OTP
+  Future<void> _handleGetOTP() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
 
-      Future.delayed(Duration(seconds: 2), () {
+      String phoneNumber = "+91${_phoneController.text.replaceAll('-', '')}";
+
+      try {
+        await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: Duration(seconds: 60),
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            UserCredential userCredential =
+                await _auth.signInWithCredential(credential);
+            if (userCredential.user != null) {
+              bool isAvailable = await FirestoreService.to
+                  .checkIfUserAvailable(userCredential.user?.uid ?? '');
+
+              Get.toNamed(AppRoute.HOME_SCREEN);
+            }
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            setState(() {
+              _isLoading = false;
+            });
+            _showError(e.message ?? "Failed to send OTP.");
+          },
+          codeSent: (String verificationId, int? resendToken) {
+            setState(() {
+              _isLoading = false;
+            });
+            Get.toNamed(
+              AppRoute.OTP_VERIFICATION_SCREEN,
+              arguments: {
+                'verificationId': verificationId,
+                'phoneNumber': phoneNumber,
+              },
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {},
+        );
+      } catch (e) {
         setState(() {
           _isLoading = false;
         });
-
-        // Navigate to OTP Verification Screen
-        Navigator.pushNamed(
-          context,
-          '/otp_verification',
-          arguments: _phoneController.text.replaceAll('-', ''),
-        );
-      });
+        _showError("Something went wrong. Please try again.");
+      }
     }
   }
 
@@ -45,6 +82,13 @@ class _EnterMobileScreenState extends State<EnterMobileScreen> {
       return "Enter a valid 10-digit number";
     }
     return null;
+  }
+
+  /// Show error message
+  void _showError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -110,10 +154,9 @@ class _EnterMobileScreenState extends State<EnterMobileScreen> {
                 ),
                 minimumSize: Size(double.infinity, 50),
               ),
-              child:
-                  _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text("Get OTP", style: TextStyle(fontSize: 18)),
+              child: _isLoading
+                  ? CircularProgressIndicator(color: Colors.white)
+                  : Text("Get OTP", style: TextStyle(fontSize: 18)),
             ),
 
             SizedBox(height: 20),
