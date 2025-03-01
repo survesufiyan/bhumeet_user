@@ -1,4 +1,5 @@
 plugins {
+<<<<<<< HEAD:android/app/build.gradle
     id "com.android.application"
     // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
@@ -31,17 +32,45 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-    }
+=======
+    id("com.android.application")
+    id("kotlin-android")
+}
 
+apply {
+    from("flutterRoot/packages/flutter_tools/gradle/flutter.gradle")
+}
+
+android {
+    compileSdkVersion(33)
+    defaultConfig {
+        applicationId = "com.example.bhumeet_user"
+        minSdkVersion(21)
+        targetSdkVersion(33)
+        versionCode = 1
+        versionName = "1.0"
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca:android/app/build.gradle.kts
+    }
     buildTypes {
+<<<<<<< HEAD:android/app/build.gradle
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+=======
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca:android/app/build.gradle.kts
         }
     }
 }
 
-flutter {
-    source = "../.."
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }

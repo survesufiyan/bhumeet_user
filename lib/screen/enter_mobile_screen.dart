@@ -2,9 +2,12 @@ import 'package:aerospace/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+<<<<<<< HEAD
 import 'package:get/get.dart';
 
 import '../constants/app_route.dart';
+=======
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
 
 class EnterMobileScreen extends StatefulWidget {
   const EnterMobileScreen({super.key});
@@ -15,7 +18,11 @@ class EnterMobileScreen extends StatefulWidget {
 
 class EnterMobileScreenState extends State<EnterMobileScreen> {
   final TextEditingController _phoneController = MaskedTextController(
+<<<<<<< HEAD
     mask: '0000000000',
+=======
+    mask: '00000-00000',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
   );
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -28,13 +35,18 @@ class EnterMobileScreenState extends State<EnterMobileScreen> {
         _isLoading = true;
       });
 
+<<<<<<< HEAD
       String phoneNumber = "+91${_phoneController.text.replaceAll('-', '')}";
+=======
+      String phoneNumber = "+91" + _phoneController.text.replaceAll('-', '');
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
 
       try {
         await _auth.verifyPhoneNumber(
           phoneNumber: phoneNumber,
           timeout: Duration(seconds: 60),
           verificationCompleted: (PhoneAuthCredential credential) async {
+<<<<<<< HEAD
             UserCredential userCredential =
                 await _auth.signInWithCredential(credential);
             if (userCredential.user != null) {
@@ -43,6 +55,10 @@ class EnterMobileScreenState extends State<EnterMobileScreen> {
 
               Get.toNamed(AppRoute.HOME_SCREEN);
             }
+=======
+            await _auth.signInWithCredential(credential);
+            _navigateToOTPVerification(phoneNumber);
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
           },
           verificationFailed: (FirebaseAuthException e) {
             setState(() {
@@ -54,11 +70,22 @@ class EnterMobileScreenState extends State<EnterMobileScreen> {
             setState(() {
               _isLoading = false;
             });
+<<<<<<< HEAD
             Get.toNamed(
               AppRoute.OTP_VERIFICATION_SCREEN,
               arguments: {
                 'verificationId': verificationId,
                 'phoneNumber': phoneNumber,
+=======
+
+            // Navigate to OTP Verification Screen
+            Navigator.pushNamed(
+              context,
+              '/otp_verification',
+              arguments: {
+                'phone': phoneNumber,
+                'verificationId': verificationId,
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
               },
             );
           },
@@ -71,6 +98,15 @@ class EnterMobileScreenState extends State<EnterMobileScreen> {
         _showError("Something went wrong. Please try again.");
       }
     }
+  }
+
+  /// Navigate to OTP Verification Screen
+  void _navigateToOTPVerification(String phoneNumber) {
+    Navigator.pushNamed(
+      context,
+      '/otp_verification',
+      arguments: {'phone': phoneNumber},
+    );
   }
 
   /// Function to validate mobile number

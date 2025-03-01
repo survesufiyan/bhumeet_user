@@ -7,13 +7,30 @@
   "client": [
     {
       "client_info": {
+<<<<<<< HEAD
         "mobilesdk_app_id": "1:1061334575051:android:a8f5fde16acf6939ffb84e",
         "android_client_info": {
           "package_name": "com.hawk.aerospace"
+=======
+        "mobilesdk_app_id": "1:1061334575051:android:79d5a37605cf5f08ffb84e",
+        "android_client_info": {
+          "package_name": "com.example.bhumeet_user"
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
         }
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
+=======
+          "client_id": "1061334575051-djkde9c2vu86p7anl1f5gjcnra35t60m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bhumeet_user",
+            "certificate_hash": "f83c57efca9113d9b3071134e5242931d3c25b0e"
+          }
+        },
+        {
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
           "client_id": "1061334575051-eranh8rcpnu2vmh2v5c916jpn91qsrvk.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
     <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hawk.aerospace">
     
@@ -11,6 +12,15 @@
     <!-- Permission for Internet (for Google Maps or other services) -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+=======
+<!-- filepath: /d:/flutter_project/bhumeet_user/android/app/src/main/AndroidManifest.xml -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.bhumeet_user">
+    <!-- Location Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     <application
         android:label="aerospace"
         android:name="${applicationName}"
@@ -26,24 +36,38 @@
             android:windowSoftInputMode="adjustResize">
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
+<<<<<<< HEAD
               android:resource="@style/NormalTheme"
             />
+=======
+              android:resource="@style/NormalTheme"/>
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         
+=======
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+<<<<<<< HEAD
 
+=======
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+<<<<<<< HEAD
 </manifest>
 
+=======
+</manifest>
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca

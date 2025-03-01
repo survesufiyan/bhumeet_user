@@ -22,7 +22,19 @@ dependencies:
   google_maps_flutter: ^2.5.0
   lottie: ^3.0.0
   pin_code_fields: ^8.0.1
+<<<<<<< HEAD
   permission_handler: ^11.4.0
+=======
+  get: ^4.6.5
+  firebase_auth: ^5.5.0
+  firebase_core: ^3.12.0
+  #firebase
+  
+
+
+
+
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
 
 dev_dependencies:
 

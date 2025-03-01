@@ -42,17 +42,29 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDmLf8lf5omvIlDUXJNP6fzhj4GTOb081Q',
+<<<<<<< HEAD
     appId: '1:1061334575051:web:77907d89217aa525ffb84e',
+=======
+    appId: '1:1061334575051:web:6ed20eafd23a499effb84e',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     messagingSenderId: '1061334575051',
     projectId: 'aerosystem-user',
     authDomain: 'aerosystem-user.firebaseapp.com',
     storageBucket: 'aerosystem-user.firebasestorage.app',
+<<<<<<< HEAD
     measurementId: 'G-JT41BV8WW5',
+=======
+    measurementId: 'G-HTN1KLRPX0',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCzodoq7QyUbvTVZgavdu2GUKZQAED_1NI',
+<<<<<<< HEAD
     appId: '1:1061334575051:android:a8f5fde16acf6939ffb84e',
+=======
+    appId: '1:1061334575051:android:79d5a37605cf5f08ffb84e',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     messagingSenderId: '1061334575051',
     projectId: 'aerosystem-user',
     storageBucket: 'aerosystem-user.firebasestorage.app',
@@ -60,34 +72,60 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDXXKRn0ds3G0OCr1JbY8Fq3PThC5wZHKY',
+<<<<<<< HEAD
     appId: '1:1061334575051:ios:dd08ac89cbc09d7fffb84e',
+=======
+    appId: '1:1061334575051:ios:16fea1a0ba836396ffb84e',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     messagingSenderId: '1061334575051',
     projectId: 'aerosystem-user',
     storageBucket: 'aerosystem-user.firebasestorage.app',
     androidClientId: '1061334575051-djkde9c2vu86p7anl1f5gjcnra35t60m.apps.googleusercontent.com',
+<<<<<<< HEAD
     iosClientId: '1061334575051-hmm2hqb4vbbckf9pm4kekd8hu7ddfrdo.apps.googleusercontent.com',
     iosBundleId: 'com.hawk.aerospace.aerospace',
+=======
+    iosClientId: '1061334575051-envprbg213paj6jo2n3npsuk7q5n7sq6.apps.googleusercontent.com',
+    iosBundleId: 'com.example.bhumeetUser',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDXXKRn0ds3G0OCr1JbY8Fq3PThC5wZHKY',
+<<<<<<< HEAD
     appId: '1:1061334575051:ios:dd08ac89cbc09d7fffb84e',
+=======
+    appId: '1:1061334575051:ios:16fea1a0ba836396ffb84e',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     messagingSenderId: '1061334575051',
     projectId: 'aerosystem-user',
     storageBucket: 'aerosystem-user.firebasestorage.app',
     androidClientId: '1061334575051-djkde9c2vu86p7anl1f5gjcnra35t60m.apps.googleusercontent.com',
+<<<<<<< HEAD
     iosClientId: '1061334575051-hmm2hqb4vbbckf9pm4kekd8hu7ddfrdo.apps.googleusercontent.com',
     iosBundleId: 'com.hawk.aerospace.aerospace',
+=======
+    iosClientId: '1061334575051-envprbg213paj6jo2n3npsuk7q5n7sq6.apps.googleusercontent.com',
+    iosBundleId: 'com.example.bhumeetUser',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyDmLf8lf5omvIlDUXJNP6fzhj4GTOb081Q',
+<<<<<<< HEAD
     appId: '1:1061334575051:web:5ae5e94dcf31337effb84e',
+=======
+    appId: '1:1061334575051:web:96e3b8c02882a76dffb84e',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
     messagingSenderId: '1061334575051',
     projectId: 'aerosystem-user',
     authDomain: 'aerosystem-user.firebaseapp.com',
     storageBucket: 'aerosystem-user.firebasestorage.app',
+<<<<<<< HEAD
     measurementId: 'G-GZY9CSGWWM',
+=======
+    measurementId: 'G-Y3WZWWLKBE',
+>>>>>>> bc7550df0837af88ac84a7a3cffc244c739ea4ca
   );
 
 }
