@@ -10,7 +10,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   // List of languages
   final List<String> languages = [
     "English",
-    "Gujarati",
+    "Gujarat",
     "Hindi",
     "Kannada",
     "Marathi",
@@ -44,20 +44,19 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
               SizedBox(height: 15),
               // List of language radio buttons
               Column(
-                children:
-                    languages.map((language) {
-                      return RadioListTile(
-                        title: Text(language, style: TextStyle(fontSize: 16)),
-                        value: language,
-                        groupValue: selectedLanguage,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedLanguage = value.toString();
-                          });
-                        },
-                        activeColor: Colors.blue,
-                      );
-                    }).toList(),
+                children: languages.map((language) {
+                  return RadioListTile(
+                    title: Text(language, style: TextStyle(fontSize: 16)),
+                    value: language,
+                    groupValue: selectedLanguage,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedLanguage = value.toString();
+                      });
+                    },
+                    activeColor: Colors.blue,
+                  );
+                }).toList(),
               ),
               SizedBox(height: 15),
               // Next Button
